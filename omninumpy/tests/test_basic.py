@@ -37,9 +37,53 @@ def test_set_backend_invalid():
     except ValueError:
         pass
 
+def test_backend_functions():
+    # Test that wrapped functions work
+    np.set_backend("numpy")
+    a = np.array([1, 2])
+    b = np.array([3, 4])
+    d = np.dot(a, b)
+    m = np.matmul(a.reshape(1, -1), b.reshape(-1, 1))
+    assert d == 11  # 1*3 + 2*4
+    assert m.shape == (1, 1)
+
+def test_performance_monitoring():
+    # Test get_timings
+    np.set_backend("numpy")
+    a = np.array([1, 2, 3])
+    timings = np.get_timings()
+    assert '_array' in timings
+    assert isinstance(timings['_array'], (int, float))
+
+def test_config_loading():
+    # Test that config functions exist (can't easily test file loading without mocking)
+    assert callable(np.set_backend)
+    assert callable(np.emulate)
+    assert callable(np.auto_backend)
+
+def test_backend_dispatch():
+    # Test that backends actually create different object types
+    original_backend = np.BACKEND  # Access internal backend
+
+    try:
+        np.set_backend("numpy")
+        a_numpy = np.array([1, 2, 3])
+        assert str(type(a_numpy)) == "<class 'numpy.ndarray'>"
+
+        # Note: Other backends require installation, so we can't test them here
+        # In a full test suite, would check:
+        # np.set_backend("torch"); a_torch = np.array([1,2,3]); assert "torch" in str(type(a_torch))
+
+    finally:
+        np.set_backend(original_backend)
+
 if __name__ == "__main__":
     test_base_import()
     test_emulate_legacy()
     test_backend_numpy()
     test_set_backend_invalid()
+    test_backend_functions()
+    test_performance_monitoring()
+    test_config_loading()
+    test_backend_dispatch()
     print("All tests passed!")

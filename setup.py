@@ -6,12 +6,12 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name="omninumpy",
     version="0.1.0",
-    author="Your Name",
-    author_email="your.email@example.com",
+    author="OmniNumPy Contributors",
+    author_email="omninumpy@example.com",
     description="A NumPy wrapper providing backward compatibility and backend switching",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/omninumpy",
+    url="https://github.com/omninumpy/omninumpy",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 3 - Alpha",
