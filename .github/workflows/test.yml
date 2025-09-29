@@ -1,0 +1,105 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        numpy-version: ["1.20.*", "1.24.*", "2.0.*", "2.1.*"]
+        exclude:
+          # NumPy 2.x requires Python 3.9+
+          - python-version: "3.8"
+            numpy-version: "2.0.*"
+          - python-version: "3.8"
+            numpy-version: "2.1.*"
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pytest-cov
+        pip install numpy==${{ matrix.numpy-version }}
+        pip install -e .
+    
+    - name: Run tests
+      run: |
+        pytest tests/ -v --cov=omninumpy --cov-report=xml
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+  test-optional-backends:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+    
+    - name: Install dependencies with optional backends
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest
+        pip install numpy
+        # Try to install JAX (CPU version)
+        pip install jax[cpu] || echo "JAX installation failed, continuing..."
+        pip install -e .
+    
+    - name: Run tests with optional backends
+      run: |
+        pytest tests/ -v
+    
+    - name: Test backend detection
+      run: |
+        python -c "
+        import omninumpy as np
+        print('Available backends:', np.list_backends())
+        print('Current backend:', np.get_backend())
+        "
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install black flake8 mypy
+        pip install numpy
+        pip install -e .
+    
+    - name: Run black
+      run: black --check omninumpy tests
+    
+    - name: Run flake8
+      run: flake8 omninumpy tests --max-line-length=88 --extend-ignore=E203,W503
+    
+    - name: Run mypy
+      run: mypy omninumpy --ignore-missing-imports

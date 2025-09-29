@@ -41,10 +41,30 @@ def array(object, dtype=None, *, copy=None, order='K', subok=False, ndmin=0, lik
     if backend.__name__ == 'numpy':
         # NumPy 2.x handles copy parameter differently
         kwargs = {'dtype': dtype, 'order': order, 'subok': subok, 'ndmin': ndmin}
+        
+        # Handle NumPy 2.x copy parameter compatibility
         if copy is not None:
-            kwargs['copy'] = copy
+            if copy is False:
+                # NumPy 2.x requires using asarray for copy=False behavior
+                try:
+                    return backend.asarray(object, dtype=dtype, order=order)
+                except Exception:
+                    # Fallback to regular array creation
+                    kwargs['copy'] = copy
+            else:
+                kwargs['copy'] = copy
+        
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
-        return backend.array(object, **kwargs)
+        
+        try:
+            return backend.array(object, **kwargs)
+        except ValueError as e:
+            if 'copy' in str(e) and copy is False:
+                # Handle NumPy 2.x copy=False compatibility issue
+                # Use asarray as recommended by NumPy 2.x migration guide
+                return backend.asarray(object, dtype=dtype, order=order)
+            else:
+                raise
     else:
         # Other backends might not support all parameters
         kwargs = {}
