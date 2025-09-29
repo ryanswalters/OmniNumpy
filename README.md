@@ -490,4 +490,55 @@ np.array([1, 2, 3])   # Executed remotely
 * **Profiles:** Emulate specific versions.
 * **Optional WebSocket:** Offload execution to remote workers.
 
+📦 How Omninumpy Works
+Omninumpy is a Python library (not an application), so there is no "main file" or executable. It's designed to be imported and used like NumPy itself.
+
+The Key File: omninumpy/__init__.py
+This is the heart of the package. When you do:
+
+import omninumpy as np
+Python executes omninumpy/__init__.py, which:
+
+Imports NumPy as _np (the internal engine)
+Sets up the backend system (numpy/torch/cupy/jax switching)
+Defines wrapper functions like _array() that dispatch to different backends
+Implements __getattr__ so np.anything delegates to NumPy unless overridden
+Loads configuration from ~/.omninumpy.json and environment variables
+Exposes all NumPy functions through delegation
+Package Structure
+omninumpy/
+├── __init__.py          # ← This is the "main" logic (library entry point)
+├── tests/
+│   └── test_basic.py    # Unit tests
+├── setup.py             # Packaging/installation script
+├── benchmarks.py        # Performance testing script
+└── README.md            # Documentation
+Usage Flow
+# User imports the package
+import omninumpy as np
+
+# Python runs omninumpy/__init__.py
+# - Imports numpy as _np
+# - Sets BACKEND = "numpy" 
+# - Defines __getattr__ to delegate to _np
+# - Loads any config files
+
+# Now np.array() calls our _array() wrapper
+# Which checks BACKEND and dispatches accordingly
+a = np.array([1,2,3])  # Uses numpy by default
+
+np.set_backend("torch")
+b = np.array([4,5,6])  # Now uses torch.tensor()
+Installation & Distribution
+setup.py tells pip how to install the package
+pip install omninumpy creates the omninumpy module in your Python environment
+The __init__.py file becomes the module's interface
+Why No Main File?
+Libraries like NumPy, Pandas, or Requests work the same way - they're collections of functions/classes you import, not programs you run directly. The "main logic" lives in __init__.py and gets executed when imported.
+
+Does this clarify how it works? The package is complete and ready to use - you just import omninumpy as np and it behaves like an enhanced NumPy!
+
+
+
+
 This keeps the surface familiar (NumPy-like) while hiding all the messy backend switching and compatibility logic.
