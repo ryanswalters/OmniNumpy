@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "omninumpy"
+version = "0.1.0"
+description = "Compatibility layer for NumPy 2.x with GPU acceleration support"
+readme = "README.md"
+license = {text = "BSD-3-Clause"}
+authors = [
+    {name = "Ryan Walters", email = "ryan@example.com"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy>=1.20.0",
+]
+
+[project.optional-dependencies]
+gpu = [
+    "cupy-cuda12x; platform_machine == 'x86_64'",
+]
+jax = [
+    "jax[cpu]",
+    "jaxlib",
+]
+all = [
+    "cupy-cuda12x; platform_machine == 'x86_64'",
+    "jax[cpu]",
+    "jaxlib",
+]
+dev = [
+    "pytest>=6.0",
+    "pytest-cov",
+    "black",
+    "flake8",
+    "mypy",
+]
+
+[project.urls]
+Homepage = "https://github.com/ryanswalters/OmniNumpy"
+Repository = "https://github.com/ryanswalters/OmniNumpy"
+Issues = "https://github.com/ryanswalters/OmniNumpy/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["omninumpy*"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
