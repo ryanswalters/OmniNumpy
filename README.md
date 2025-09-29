@@ -1,3 +1,47 @@
+---
+
+# OmniNumPy (Experimental)
+
+OmniNumPy is an **experimental compatibility layer** that sits on top of modern NumPy (≥2.0) and lets you run the same code across multiple array backends — **NumPy, PyTorch, CuPy, and JAX** — with minimal changes.
+
+This project isn’t a full NumPy replacement (and never claims to be). Instead, it’s a **proof of concept**:
+
+* ✅ Backend switching works for real ML/scientific workloads.
+* ✅ Legacy NumPy APIs can be shimmed back in (`np.int`, `np.asscalar`, etc.).
+* ✅ Core linear algebra ops run natively across backends.
+* ✅ JAX support includes device placement (CPU/GPU/TPU) and JIT compilation.
+
+Think of this repo as a **lab bench**. Some functions are wired up, tested, and benchmarked. Others fall back to NumPy or raise clear errors. The purpose is to show what’s possible and spark ideas for the next generation of multi-backend array libraries.
+
+---
+
+## ⚠️ Status
+
+* **Experimental**: APIs, wrappers, and behaviors will change often.
+* **Partial coverage**: Only ~20 functions are backend-aware today. Thousands more are untouched.
+* **Testing**: Cross-backend correctness checks exist but aren’t exhaustive.
+* **Performance**: Benchmarks highlight real speedups, but not every op is optimized.
+
+---
+
+## Why This Exists
+
+Scientific computing shouldn’t force you into one backend forever. You should be able to:
+
+* Write NumPy-style code.
+* Switch to GPU with Torch or CuPy.
+* Explore JAX with JIT, TPU, and auto-device placement.
+* Keep old libraries alive by restoring missing APIs.
+
+OmniNumPy proves this vision works — even if it’s only partial today.
+
+---
+
+## License
+
+MIT — take any piece, fork it, or bolt it into your own project.
+
+
 🎯 Goal
 
 A single NumPy wrapper that:
