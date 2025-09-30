@@ -139,6 +139,16 @@ JAX JIT applied only to critical ops.
 
 Error handling = explicit (no silent fallback).
 
+## 🔧 Troubleshooting (a.k.a. Install for Humans)
+
+1. Smash the big blue **Code** button at the top.  
+2. Download ZIP.  
+3. Unzip like it’s 2007.  
+4. Open VS Code.  
+5. Install Roo or Kilo extension.  
+6. Type your incantation, profit.  
+
+
 🗺️ Roadmap
 
 Wrap more functions across all backends.
