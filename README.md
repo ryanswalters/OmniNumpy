@@ -131,7 +131,7 @@ linalg.svd	✅	✅	✅	✅ (JIT)
 …	…	…	…	…
 ⚠️ Limitations
 
-Only ~16 core functions backend-aware today.
+Only ~20 core functions backend-aware today.
 
 Most others fall back to NumPy.
 
