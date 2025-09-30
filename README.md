@@ -1,3 +1,10 @@
+This project uses NumPy, licensed under the BSD 3-Clause License.
+NumPy © 2005–2025 NumPy Developers.
+## Credits
+
+This project builds on [NumPy](https://numpy.org/), 
+© 2005–2025 NumPy Developers, licensed under the BSD 3-Clause License. 
+See [LICENSE.txt](https://github.com/numpy/numpy/blob/main/LICENSE.txt) for details.
 
 # OmniNumpy
 
