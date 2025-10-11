@@ -5,9 +5,9 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="omninumpy",
-    version="0.1.0",
+    version="0.1.3",
     author="OmniNumPy Contributors",
-    author_email="omninumpy@example.com",
+    author_email="ryanwalters (at) gmail.com",
     description="A NumPy wrapper providing backward compatibility and backend switching",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -35,4 +35,5 @@ setup(
         "jax": ["jax", "jaxlib"],
     },
     test_suite="omninumpy.tests",
+
 )
