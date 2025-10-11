@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "omninumpy"
-version = "0.1.5"
+version = "0.1.65"
 description = "Compatibility layer for NumPy 2.x with GPU acceleration support"
 readme = "README.md"
 license = {text = "BSD-3-Clause"}
