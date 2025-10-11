@@ -1,18 +1,3 @@
-"""
-OmniNumpy - Compatibility layer for NumPy 2.x with GPU acceleration support.
-
-Stop fighting NumPy version hell. OmniNumpy is the compatibility layer that lets 
-legacy code run on NumPy 2.x while unlocking GPU acceleration with zero refactoring.
-Drop-in replacement. Backend agnostic. Just works.
-
-Usage:
-    import omninumpy as np
-    
-    # Your existing NumPy code works unchanged
-    arr = np.array([1, 2, 3])
-    result = np.sum(arr)
-"""
-
 # Import backend management first
 from .backend import (
     get_backend, set_backend, list_backends, 
