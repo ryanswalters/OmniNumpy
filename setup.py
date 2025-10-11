@@ -5,9 +5,9 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="omninumpy",
-    version="0.1.3",
+    version="0.1.5",
     author="OmniNumPy Contributors",
-    author_email="ryanwalters (at) gmail.com",
+    author_email="ryanwalters@gmail.com",
     description="A NumPy wrapper providing backward compatibility and backend switching",
     long_description=long_description,
     long_description_content_type="text/markdown",

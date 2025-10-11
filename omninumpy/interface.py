@@ -6,11 +6,12 @@ while providing compatibility wrappers where needed.
 """
 
 import sys
+import types
 from . import core
 from . import backend as backend_module
 
 
-class OmniNumpyModule:
+class OmniNumpyModule(types.ModuleType):
     """
     A module-like object that provides full NumPy compatibility.
     
@@ -44,7 +45,7 @@ class OmniNumpyModule:
         
         # Handle core properties (dtypes, constants)
         if name in self._core_properties:
-            backend = core._get_backend()
+            backend = backend_module.get_current_backend_module()
             if hasattr(backend, name):
                 return getattr(backend, name)
             else:
@@ -53,7 +54,7 @@ class OmniNumpyModule:
                 return getattr(np, name)
         
         # For everything else, delegate to the current backend
-        backend = core._get_backend()
+        backend = backend_module.get_current_backend_module()
         if hasattr(backend, name):
             attr = getattr(backend, name)
             
@@ -98,7 +99,7 @@ class OmniNumpyModule:
     
     def __dir__(self):
         """Return all available attributes from the current backend."""
-        backend = core._get_backend()
+        backend = backend_module.get_current_backend_module()
         backend_attrs = dir(backend) if backend else []
         
         # Add our special functions
@@ -116,7 +117,7 @@ class OmniNumpyModule:
     @property 
     def version(self):
         """Return version info for the current backend."""
-        backend = core._get_backend()
+        backend = backend_module.get_current_backend_module()
         if hasattr(backend, 'version'):
             return backend.version
         elif hasattr(backend, '__version__'):
@@ -126,7 +127,7 @@ class OmniNumpyModule:
 
 
 # Create the module instance
-_omni_module = OmniNumpyModule()
+_omni_module = OmniNumpyModule(__name__)
 
 # Make this module behave like the OmniNumpyModule instance
 sys.modules[__name__] = _omni_module

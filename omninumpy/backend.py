@@ -56,7 +56,7 @@ class BackendManager:
     
     def get_backend(self) -> str:
         """Get the name of the current backend."""
-        return self._current_backend
+        return self._current_backend or 'numpy'
     
     def set_backend(self, backend_name: str) -> None:
         """Set the current backend."""
@@ -79,7 +79,9 @@ class BackendManager:
         """Get the backend module."""
         if backend_name is None:
             backend_name = self._current_backend
-        return self._backends.get(backend_name)
+        if backend_name is None:
+            backend_name = 'numpy'
+        return self._backends.get(backend_name, self._backends['numpy'])  # Fallback to numpy
     
     def auto_backend(self) -> str:
         """Automatically select the best available backend."""
