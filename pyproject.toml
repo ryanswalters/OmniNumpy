@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "omninumpy"
-version = "0.1.0"
+version = "0.1.3"
 description = "Compatibility layer for NumPy 2.x with GPU acceleration support"
 readme = "README.md"
 license = {text = "BSD-3-Clause"}
 authors = [
-    {name = "Ryan Walters", email = "ryan@example.com"}
+    {name = "Ryan Walters", email = "ryanwalters  (at)  gmail.com"}
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
