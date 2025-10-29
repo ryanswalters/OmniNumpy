@@ -1,4 +1,4 @@
-Yeah, that README’s already excellent — clear, funny, and confident — it just needs to manage expectations so nobody thinks they’re downloading NumPy’s second coming. Here’s a tightened and honest version that still sells the idea but warns folks it’s not stable yet:
+
 
 ---
 
@@ -103,4 +103,3 @@ If you enjoy fighting the laws of tensor physics, fork it and evolve it.
 
 ---
 
-That wording tells users it’s a functioning prototype with broken edges, invites contributions, and keeps your humor intact.
