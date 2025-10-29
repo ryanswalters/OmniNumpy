@@ -1,165 +1,106 @@
-
-
-# OmniNumPy (Experimental)
-
-> Stop fighting NumPy version hell. OmniNumPy is a compatibility layer that lets legacy code run on NumPy 2.x while unlocking GPU acceleration with zero refactoring. Drop-in replacement. Backend agnostic. Just works.
+Yeah, that README’s already excellent — clear, funny, and confident — it just needs to manage expectations so nobody thinks they’re downloading NumPy’s second coming. Here’s a tightened and honest version that still sells the idea but warns folks it’s not stable yet:
 
 ---
 
-## 📜 Credits
+# **OmniNumPy (Unfinished Experiment)**
 
-This project uses [NumPy](https://numpy.org/), licensed under the BSD 3-Clause License.  
-NumPy © 2005–2025 NumPy Developers. See [LICENSE.txt](https://github.com/numpy/numpy/blob/main/LICENSE.txt) for details.
+> *Stop fighting NumPy version hell.*
+> OmniNumPy is an **attempt** at a universal compatibility layer — run legacy NumPy code on NumPy 2.x and even swap backends (Torch, CuPy, JAX) with zero refactoring.
+> It mostly works. Sometimes it explodes. That’s research.
 
 ---
 
-## ⚠️ Status
+## ⚠️ Status: Prototype, not Production
 
-- **Experimental**: APIs, wrappers, and behaviors will change often.  
-- **Partial coverage**: Only ~20 functions are backend-aware today. Thousands more are untouched.  
-- **Testing**: Cross-backend correctness checks exist but aren’t exhaustive.  
-- **Performance**: Benchmarks highlight real speedups, but not every op is optimized.  
+* **Unfinished** — several backends half-wired; some ops crash outright.
+* **Partial coverage** — about 20 functions dispatch correctly; thousands don’t.
+* **Fragile** — error handling is explicit, but not graceful.
+* **Performance** — benchmarks are interesting, not reliable.
+
+If you can make it stable, please do. PRs welcome.
 
 ---
 
 ## 🚀 Why This Exists
 
-Scientific computing shouldn’t force you into one backend forever. You should be able to:
+Scientific computing shouldn’t be a walled garden. You should be able to:
 
-- Write NumPy-style code.  
-- Switch to GPU with Torch or CuPy.  
-- Explore JAX with JIT, TPU, and auto-device placement.  
-- Keep old libraries alive by restoring missing APIs.  
+* Write once, run on CPU or GPU.
+* Keep ancient NumPy 1.x code alive under NumPy 2.x.
+* Experiment with Torch, CuPy, or JAX without rewriting everything.
 
-OmniNumPy proves this vision works — even if it’s only partial today.
+OmniNumPy proves that idea *mostly* works — for now.
 
 ---
 
-## 📦 Installation
 
-```bash
-pip install omninumpy
+---
 
+## 📖 Usage (When It Does Work)
 
-Optional backends:
-
-pip install omninumpy[torch]   # For PyTorch backend
-pip install omninumpy[cupy]    # For CuPy backend
-pip install omninumpy[jax]     # For JAX backend
-
-📖 Usage
-Basic
+```python
 import omninumpy as np
 
+np.set_backend("torch")
 a = np.array([1, 2, 3])
 b = np.dot(a, a)
+```
 
-Legacy APIs
-import omninumpy as np
+You can also emulate old NumPy behavior:
+
+```python
 np.emulate("1.21")
+print(np.int)
+```
 
-print(np.int)  
-scalar = np.asscalar(np.array([42]))
+---
 
-Backend Switching
-np.set_backend("torch")
-a = np.array([1, 2, 3])   # torch.Tensor
+## 🧠 Architecture Sketch
 
-np.set_backend("cupy")
-b = np.array([4, 5, 6])   # cupy.ndarray
+```
+User Code → Compatibility Layer → Backend Abstraction → Version Emulator → NumPy ≥ 2.x
+```
 
-np.set_backend("jax:gpu")
-c = np.array([7, 8, 9])   # JAX array on GPU
+The idea: same API, different engines underneath.
 
-🎯 Goals
+---
 
-Run on top of the latest stable NumPy (≥2.0).
+## ✅ Currently Functional
 
-Provide backward compatibility for older NumPy APIs (1.x, 1.21, etc.).
+| Function   | NumPy | Torch | CuPy |    JAX   |
+| ---------- | :---: | :---: | :--: | :------: |
+| array      |   ✅   |   ✅   |   ✅  |     ✅    |
+| dot        |   ✅   |   ✅   |   ✅  | ⚠️ (JIT) |
+| matmul     |   ✅   |   ✅   |   ✅  | ⚠️ (JIT) |
+| mean, sum  |   ✅   |   ✅   |   ✅  |     ✅    |
+| linalg.inv |   ✅   |   ✅   |   ✅  | ⚠️ (JIT) |
+| linalg.svd |   ✅   |   ✅   |   ✅  | ⚠️ (JIT) |
 
-Allow backend swaps (CuPy, Torch, JAX) with zero refactoring.
+Everything else → NumPy fallback → hope.
 
-Minimize breakage in AI/ML libraries pinned to outdated NumPy.
+---
 
-🛠️ Core Components
+## 🗺️ Roadmap
 
-Base Layer (NumPy ≥2.x) – Import and expose modern NumPy.
+* Wire up more functions across all backends
+* Add isolation and smarter fallbacks
+* Expand linear algebra suite
+* Harden tests and CI
 
-Legacy Compatibility Layer – Restore np.int, np.float, np.asscalar, etc.
+---
 
-Backend Abstraction Layer – set_backend("numpy" | "torch" | "cupy" | "jax").
+## 📜 License & Credits
 
-Version Emulation Profiles – emulate("1.19"), emulate("1.21"), etc.
+MIT License.
+Built on [NumPy (© NumPy Developers, BSD 3-Clause)](https://numpy.org/).
+Torch, CuPy, and JAX belong to their respective developers.
 
-Testing Matrix – CI with NumPy 1.19 → 2.x, Torch, Pandas.
+---
 
-Optional Extensions – Auto-detect breaking libs, config file, warnings.
+**TL;DR:**
+OmniNumPy doesn’t *work* reliably — yet. But the architecture’s there.
+If you enjoy fighting the laws of tensor physics, fork it and evolve it.
 
-🌐 High-Level Architecture
- ┌───────────────────────────┐
- │        User Code          │
- │   import omninumpy as np  │
- └─────────────┬─────────────┘
-               ▼
- ┌───────────────────────────┐
- │  Compatibility Layer       │
- │  (shims for old APIs)      │
- └─────────────┬─────────────┘
-               ▼
- ┌───────────────────────────┐
- │ Backend Abstraction Layer │
- │ set_backend("numpy"/...)  │
- └─────────────┬─────────────┘
-               ▼
- ┌───────────────────────────┐
- │ Version Emulation Profiles│
- │ emulate("1.19"/"2.x")     │
- └─────────────┬─────────────┘
-               ▼
- ┌───────────────────────────┐
- │     Base NumPy ≥ 2.x      │
- └───────────────────────────┘
+---
 
-✅ Implemented Functions (Preview)
-Function	NumPy	Torch	CuPy	JAX
-array	✅	✅	✅	✅
-dot	✅	✅	✅	✅ (JIT)
-matmul	✅	✅	✅	✅ (JIT)
-mean, sum	✅	✅	✅	✅
-linalg.inv	✅	✅	✅	✅ (JIT)
-linalg.svd	✅	✅	✅	✅ (JIT)
-…	…	…	…	…
-⚠️ Limitations
-
-Only ~20 core functions backend-aware today.
-
-Most others fall back to NumPy.
-
-JAX JIT applied only to critical ops.
-
-Error handling = explicit (no silent fallback).
-
-## 🔧 Troubleshooting (a.k.a. Install for Humans)
-
-1. Smash the big blue **Code** button at the top.  
-2. Download ZIP.  
-3. Unzip like it’s 2007.  
-4. Open VS Code.  
-5. Install Roo or Kilo extension.  
-6. Type your incantation, profit.  
-
-
-🗺️ Roadmap
-
-Wrap more functions across all backends.
-
-Add strict backend isolation.
-
-Expand linear algebra coverage.
-
-Improve cross-backend tests + benchmarks.
-
-📜 License
-
-MIT — take any piece, fork it, or bolt it into your own project.
-
+That wording tells users it’s a functioning prototype with broken edges, invites contributions, and keeps your humor intact.
